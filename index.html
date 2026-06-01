@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Errand Runner China</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lego-grey: #a0a0a0; 
+            --lego-blue: #0055bf;
+            --lego-yellow: #f5cf16;
+            --lego-red: #d00000;
+            --lego-green: #2d8a2d;
+            --border-color: #000000;
+            --discord-color: #5865F2;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--lego-grey);
+            color: #000;
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        /* --- Pixel Art Icons (Improved High Detail) --- */
+        .icon-container { width: 48px; height: 48px; margin-bottom: 15px; display: block; }
+
+        .icon-wallet {
+            box-shadow: 
+                10px 10px #8B4513, 15px 10px #8B4513, 20px 10px #8B4513, 25px 10px #8B4513, 30px 10px #8B4513,
+                10px 15px #8B4513, 20px 15px #f5cf16, 25px 15px #8B4513, 30px 15px #8B4513,
+                10px 20px #8B4513, 15px 20px #8B4513, 20px 20px #8B4513, 25px 20px #8B4513, 30px 20px #8B4513,
+                10px 25px #5D2E0C, 15px 25px #5D2E0C, 20px 25px #5D2E0C, 25px 25px #5D2E0C, 30px 25px #5D2E0C;
+            width: 5px; height: 5px;
+        }
+
+        .icon-boot {
+            box-shadow: 
+                20px 10px #63472b, 25px 10px #63472b,
+                20px 15px #63472b, 25px 15px #63472b,
+                20px 20px #63472b, 25px 20px #63472b,
+                10px 25px #63472b, 15px 25px #63472b, 20px 25px #63472b, 25px 25px #63472b,
+                10px 30px #333, 15px 30px #333, 20px 30px #333, 25px 30px #333, 30px 30px #333;
+            width: 5px; height: 5px;
+        }
+
+        .icon-suit {
+            box-shadow: 
+                10px 10px #002366, 15px 10px #fff, 20px 10px #fff, 25px 10px #002366,
+                10px 15px #002366, 15px 15px #d00, 20px 15px #d00, 25px 15px #002366,
+                10px 20px #002366, 15px 20px #d00, 20px 20px #d00, 25px 20px #002366,
+                10px 25px #002366, 15px 25px #002366, 20px 25px #002366, 25px 25px #002366,
+                10px 30px #002366, 15px 30px #002366, 20px 30px #002366, 25px 30px #002366;
+            width: 5px; height: 5px;
+        }
+
+        .icon-star {
+            box-shadow: 
+                20px 5px #f5cf16,
+                15px 10px #f5cf16, 20px 10px #f5cf16, 25px 10px #f5cf16,
+                10px 15px #f5cf16, 15px 15px #f5cf16, 20px 15px #f5cf16, 25px 15px #f5cf16, 30px 15px #f5cf16,
+                15px 20px #f5cf16, 20px 20px #f5cf16, 25px 20px #f5cf16,
+                15px 25px #f5cf16, 25px 25px #f5cf16;
+            width: 5px; height: 5px;
+        }
+
+        /* --- UI Components --- */
+        .brick-box { background: white; border: 4px solid var(--border-color); box-shadow: 8px 8px 0px rgba(0,0,0,0.2); padding: 25px; }
+        
+        .hover-card {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 6px 6px 0px #000;
+        }
+        .hover-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 12px 12px 0px rgba(0,0,0,0.15);
+        }
+
+        .section-title { font-size: 50px; text-align: center; margin: 60px 0 40px 0; color: var(--lego-blue); }
+
+        /* --- Navigation --- */
+        nav {
+            background: #fff;
+            border-bottom: 6px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a { margin-left: 30px; text-decoration: none; color: #000; border-bottom: 4px solid transparent; font-weight: bold; }
+        nav a:hover { color: var(--lego-blue); border-bottom: 4px solid var(--lego-blue); }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: #eee;
+            border-bottom: 4px solid var(--border-color);
+        }
+        .brand { font-size: 40px; color: var(--lego-blue); font-weight: bold; }
+        .discord-btn {
+            background: var(--discord-color); color: white; text-decoration: none; padding: 12px 24px;
+            border: 4px solid var(--border-color); box-shadow: 4px 4px 0px #000;
+            display: flex; align-items: center; gap: 12px; transition: 0.1s;
+        }
+        .discord-btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+
+        /* --- Hero Section --- */
+        #home-hero { display: flex; align-items: center; justify-content: center; padding: 60px 5%; gap: 60px; }
+        .hero-image { width: 400px; height: 400px; border: 8px solid var(--border-color); background: #fff; image-rendering: pixelated; }
+        .hero-text { max-width: 550px; }
+        .hero-text h1 { font-size: 52px; margin-bottom: 25px; line-height: 0.9; }
+        .hero-text p { background: var(--lego-yellow); padding: 25px; border: 4px solid var(--border-color); font-size: 30px; line-height: 1.1; }
+
+        /* --- How It Works Section (Position Swapped) --- */
+        #how-it-works { padding: 80px 5% 120px 5%; background: #ddd; border-top: 6px solid var(--border-color); }
+        .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .work-card h3 { 
+            padding: 10px 20px;
+            margin: -25px -25px 20px -25px;
+            font-size: 32px;
+            border-bottom: 4px solid #000;
+        }
+        .comm-header { background: var(--lego-blue); color: white; }
+        .run-header { background: var(--lego-yellow); color: black; }
+        .work-card ul { list-style: none; padding: 0; }
+        .work-card li { margin-bottom: 15px; padding-left: 35px; position: relative; line-height: 1.2; }
+        .work-card li::before { content: '■'; position: absolute; left: 0; color: var(--lego-red); }
+
+        /* --- Quest Types Section (Position Swapped + Wider) --- */
+        #quest-types { padding: 80px 5% 150px 5%; background: #ececec; border-top: 6px solid var(--border-color); }
+        .quest-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); 
+            gap: 25px; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+        .quest-card { background: white; border: 4px solid var(--border-color); padding: 25px; }
+        .quest-card h3 { font-size: 28px; margin: 10px 0; color: var(--lego-blue); border-bottom: 4px solid var(--lego-yellow); display: inline-block; }
+        .quest-card ul { list-style: none; padding: 0; font-size: 20px; margin-top: 15px; }
+        .quest-card li { margin-bottom: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; line-height: 1.1; }
+
+        /* --- FAQ --- */
+        #faq { padding: 80px 5%; background: #f9f9f9; border-top: 6px solid var(--border-color); }
+        .faq-container { max-width: 950px; margin: 0 auto; }
+        .faq-item { margin-bottom: 15px; border: 4px solid #000; background: #fff; cursor: pointer; }
+        .faq-question { padding: 20px; background: var(--lego-yellow); border-bottom: 4px solid #000; font-weight: bold; display: flex; justify-content: space-between; }
+        .faq-question::after { content: '+'; font-size: 30px; }
+        .faq-item.active .faq-question::after { content: '-'; }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: 0.3s; font-size: 22px; }
+        .faq-item.active .faq-answer { max-height: 800px; padding: 20px; }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 60px 40px;
+            background: #333;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            #home-hero { flex-direction: column; text-align: center; }
+            .work-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="top"></div>
+
+    <!-- Swapped Nav buttons: How it works comes before Quests -->
+    <nav>
+        <a href="#top">Home</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#quest-types">Quests</a>
+        <a href="#faq">FAQ</a>
+    </nav>
+
+    <header>
+        <div class="brand">Errand Runner China</div>
+        <a href="https://discord.gg/EtppCPq7hz" class="discord-btn" target="_blank">
+            <svg style="width:28px;height:28px;fill:white" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.419-2.157 2.419z"/></svg>
+            Join us here, no account needed
+        </a>
+    </header>
+
+    <section id="home-hero">
+        <img src="runner.png" alt="Errand Runner" class="hero-image">
+        <div class="hero-text">
+            <h1>Your Personal & Business Assistant in China</h1>
+            <p>We aim to help you do anything in China—big or small. Just ask away and let us handle the rest!</p>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS (Section Moved UP) -->
+    <section id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        <div class="work-grid">
+            <div class="work-card brick-box hover-card">
+                <h3 class="comm-header">Quest Commissioner</h3>
+                <ul>
+                    <li><strong>Join Discord:</strong> Enter our marketplace instantly.</li>
+                    <li><strong>Post Your Task:</strong> Set your budget or ask for quotes.</li>
+                    <li><strong>Review Bids:</strong> Runners will bid for your task with their best prices.</li>
+                    <li><strong>Choose Your Runner:</strong> Pick the person who fits your needs best.</li>
+                    <li><strong>Mission Done:</strong> Relax while your runner completes the task!</li>
+                </ul>
+            </div>
+            <div class="work-card brick-box hover-card">
+                <h3 class="run-header">Errand Runner</h3>
+                <ul>
+                    <li><strong>Join the Community:</strong> Find local and digital tasks.</li>
+                    <li><strong>Find a Quest:</strong> Browse jobs that match your skills.</li>
+                    <li><strong>Submit a Bid:</strong> Compete with other runners for the task.</li>
+                    <li><strong>Get Selected:</strong> Verify your details and start working.</li>
+                    <li><strong>Get Paid:</strong> Finish the job and collect your earnings!</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUEST TYPES (Section Moved DOWN) -->
+    <section id="quest-types">
+        <h2 class="section-title">What Kind of Quests Can I Post?</h2>
+        <div class="quest-grid">
+            <div class="quest-card hover-card">
+                <div class="icon-container icon-wallet"></div>
+                <h3>Digital & Shopping</h3>
+                <ul>
+                    <li>"Help me pay for a Taobao order via Alipay."</li>
+                    <li>"Get an SMS verification code for a Chinese app."</li>
+                    <li>"Find a product on 1688 and check shipping costs."</li>
+                </ul>
+            </div>
+            <div class="quest-card hover-card">
+                <div class="icon-container icon-boot"></div>
+                <h3>Travel & Support</h3>
+                <ul>
+                    <li>"Book a high-speed train ticket for me."</li>
+                    <li>"Call a Didi for me; my international card is not working."</li>
+                    <li>"I left my bag at a restaurant; please pick it up."</li>
+                </ul>
+            </div>
+            <div class="quest-card hover-card">
+                <div class="icon-container icon-suit"></div>
+                <h3>Business & Logistics</h3>
+                <ul>
+                    <li>"Visit a factory in Ningbo and take QC photos."</li>
+                    <li>"Translate a contract into English."</li>
+                    <li>"Consolidate 5 packages into one via SF Express."</li>
+                </ul>
+            </div>
+            <div class="quest-card hover-card">
+                <div class="icon-container icon-star"></div>
+                <h3>Personal & Unique</h3>
+                <ul>
+                    <li>"Help me book a local medical appointment."</li>
+                    <li>"Find a tea master for a private lesson."</li>
+                    <li>"Send a surprise cake to a friend in Shenzhen."</li>
+                </ul>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 60px; font-size: 28px;">
+            Don't see your task? If it's legal and doable, <strong>just ask!</strong>
+        </p>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <!-- FAQ 1 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">1. Who is taking my request?</div>
+                <div class="faq-answer">Our platform is a marketplace of "Runners"—local experts, bilingual residents, and expats living across China. They provide "boots on the ground" support and understand the local systems. You aren't hiring a company; you are connecting with real people.</div>
+            </div>
+            <!-- FAQ 2 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">2. How much does a "Quest" cost?</div>
+                <div class="faq-answer">Price is flexible! You can either post an "Offer" or leave it open for Runners to "Bid." This allows multiple runners to compete for your task, so you can choose the person and price that fits your budget best.</div>
+            </div>
+            <!-- FAQ 3 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">3. How do I pay, and is it safe?</div>
+                <div class="faq-answer">
+                    <strong>Direct-Market:</strong> Pay your Runner directly. We do not handle funds or charge fees.<br><br>
+                    <strong>Escrow-Market:</strong> We act as a trusted middleman. We hold your payment securely and only release it after you confirm delivery. <strong>The Commissioner pays zero platform fees</strong>; commission (5-10%) and currency fees are deducted from the Runner's payout.
+                </div>
+            </div>
+            <!-- FAQ 4 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">4. Can you find the "cheapest" price?</div>
+                <div class="faq-answer">Our Runners act as your local advocate. They will search the market to find the most reasonable rates for you. If you have a specific store or website you prefer, just tell your Runner!</div>
+            </div>
+            <!-- FAQ 5 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">5. Can you help me find rare items?</div>
+                <div class="faq-answer">If it exists, we’ll help you find it! From limited edition collectibles to specific local teas, our Runners love a challenge. For rare requests, a higher reward might be needed to attract the right Runner.</div>
+            </div>
+            <!-- FAQ 6 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">6. Professional translation or legal advice?</div>
+                <div class="faq-answer">Most Runners are bilingual assistants. However, our community is open to everyone—including licensed professionals. If your task requires a certified expert, specify this in your post and verify their credentials before hiring.</div>
+            </div>
+            <!-- FAQ 7 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">7. Can you help me if I don’t live in China?</div>
+                <div class="faq-answer">Yes! Many of our Commissioners are outside of China. We can help you coordinate future visits, inspect factories, or send gifts to loved ones living in China.</div>
+            </div>
+            <!-- FAQ 8 -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">8. What if I am not happy with the result?</div>
+                <div class="faq-answer">
+                    <strong>For Escrow tasks:</strong> You can open a dispute through our support team. We will step in as mediators to investigate and provide the best resolution within our power.<br><br>
+                    <strong>3rd Parties:</strong> While we can’t control shop policies, your Runner will act as your advocate to negotiate the best possible result.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UPDATED FOOTER -->
+    <footer>
+        &copy; 2026 Errand Runner China - Built for the community. <br>
+        <a href="legal.html" style="color: var(--lego-yellow); text-decoration: none; font-size: 16px; border-bottom: 1px solid var(--lego-yellow);">TERMS OF SERVICE & PRIVACY POLICY</a>
+    </footer>
+
+    <script>
+        function toggleFaq(element) { element.classList.toggle('active'); }
+    </script>
+
+</body>
+</html>
